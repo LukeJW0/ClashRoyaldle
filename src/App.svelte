@@ -8,6 +8,11 @@
   const r = Math.floor(Math.random() * cards.length);
   let randomCard = cards[r];
 
+  let iconsOn = true;
+  function toggleIcons() {
+    iconsOn = !iconsOn;
+  }
+
   function clearStuff() {
     localStorage.clear();
     console.log('test');
@@ -109,7 +114,7 @@
       guessColor[guessIndex][5] = "gray";
     }
     guessIndex++;
-    if (guessIndex > 5) {
+    if (guessIndex > 5 && won == false) {
       gameLost();
     }
   }
@@ -244,6 +249,8 @@
       </div>
     </div>
     <div class="buttons">
+      {#if !iconsOn}<i on:mousedown={toggleIcons} class="fa-solid fa-toggle-off fa-2x toggle"></i>{/if}
+      {#if iconsOn}<i on:mousedown={toggleIcons} class="fa-solid fa-toggle-on fa-2x toggle"></i>{/if}
       <i class="fa-brands fa-tiktok fa-2xl tiktokbutton"></i>
       <i class="fa-solid fa-chart-simple fa-2xl statsbutton" on:mousedown={showStats}></i>
       <i class="fa-solid fa-circle-info fa-2xl infobutton" on:mousedown={showInfo}></i>
@@ -251,7 +258,7 @@
     <h1 class=title>CLASH ROYALDLE</h1>
     <h1 class=mobile-title>CLASH ROYALDLE</h1>
     <div class=guessgroup>
-      <input class="inputbox inputmovie" type="text" on:keydown={enterGuessKey} bind:value={inputVar} on:input={filterSearch} on:focus={guessFocus} on:blur={guessFocus}>
+      <input class="inputbox inputmovie" type="text" on:keydown={enterGuessKey} bind:value={inputVar} on:input={filterSearch} on:focus={guessFocus} on:blur={guessFocus}/>
       {#if guessFocused}
         {#each searchResults as result, i}
           <button class=searchresult on:mousedown={() => chooseResult(i)}>{searchResults[i]}</button>
@@ -261,12 +268,26 @@
     <button class=enterbutton on:click={enterGuess}>Enter</button>
     <div class=results>
       <div class=result>
-        <div style="color: white" class="resultchild mobiledisable">Name</div>
-        <div style="color: white" class=resultchild>Rarity</div>
-        <div style="color: white" class=resultchild>Health</div>
-        <div style="color: white" class=resultchild><span class=mobiledisable>Damage</span><span class=mobileenable>DMG</span></div>
-        <div style="color: white" class=resultchild>Type</div>
-        <div style="color: white" class=resultchild>Elixir</div>
+        <div style="color: white" class="resultchild mobiledisable">Name
+          {#if iconsOn}<i class="fa-solid fa-pen fa-sm penicon"></i>{/if}
+        </div>
+        <div style="color: white" class=resultchild>Rarity
+          {#if iconsOn}<i class="fa-solid fa-gem fa-sm diamondicon"></i>{/if}
+        </div>
+        <div style="color: white" class=resultchild>Health
+          {#if iconsOn}<i class="fa-solid fa-heart hearticon fa-sm"></i>{/if}
+        </div>
+        <div style="color: white" class=resultchild><span class=mobiledisable>Damage</span><span class=mobileenable>DMG</span>
+<!--           <i class="fa-solid fa-droplet fa-sm bloodicon"></i> -->
+<!--           <i class="fa-solid fa-shield fa-sm shieldicon"></i> -->
+          {#if iconsOn}<i class="fa-solid fa-fire-flame-curved fa-sm fireicon"></i>{/if}
+        </div>
+        <div style="color: white" class=resultchild>Type
+          {#if iconsOn}<i class="fa-solid fa-shield-halved fa-sm shieldicon"></i>{/if}
+        </div>
+        <div style="color: white" class=resultchild>Elixir
+          {#if iconsOn}<i class="fa-solid fa-droplet fa-sm elixiricon"></i>{/if}
+        </div>
       </div>
       {#each guesses as guessed, i}
         <h1 bind:this={mobileElement} style="color: {guessColor[i][0]}" class="name mobileenable">{guess[i][0]}</h1>
@@ -305,6 +326,11 @@
     margin-bottom: 1rem;
   }
 
+  .toggle {
+    color: white;
+    margin: 0 1%;
+  }
+
   .statsbutton {
 /*     color: #222222; */
     color: white;
@@ -332,10 +358,9 @@
   }
 
   .buttons {
-/*     flex-basis: 20%;
     display: flex;
-    justify-content: right; */
     justify-content: center;
+    align-items: center;
     margin-top: 2%;
     margin-bottom: 1.5%;
   }
@@ -349,6 +374,10 @@
   }
 
   .tiktokbutton:hover {
+    color: gray;
+  }
+
+  .toggle:hover {
     color: gray;
   }
 
@@ -520,6 +549,34 @@
     padding: 1% 0;
     text-overflow: hidden;
   }
+
+  .hearticon {
+    color: red;
+  }
+
+  .bloodicon {
+    color: red;
+  }
+
+  .shieldicon {
+    color: #56342a;
+  }
+
+  .fireicon {
+    color: #ff4e3b;
+  }
+
+  .elixiricon {
+    color: purple;
+  }
+
+  .diamondicon {
+    color: cyan;
+  }
+
+  .penicon {
+    color: #e19526;
+  }
   
   h1 {
     color: white;
@@ -574,6 +631,39 @@
 
   .mobileenable {
     display: none;
+  }
+  
+/*   .toggle {
+    display: flex;
+    align-items: center;
+    width: 3.5rem;
+    height: 2rem;
+    background: #2c3e50;
+    border-radius: 1rem;
+    transition: all .25s ease;
+    cursor: pointer;
+  } */
+  
+  .toggle-handler {
+    display: flex;
+    justify-self: left;
+    justify-content: center;
+    align-items: center;
+    width: 3.5rem;
+    height: 1.5rem;
+    background: #34495e;
+    border-radius: 50%;
+    transition: all .25s ease;
+    box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  }
+  
+  .toggle_clicked {
+    background: #16a085;
+  }
+
+  .toggle_clicked .toggle-handler {
+    justify-self: right;
+    background: #1abc9c;
   }
 
   @media screen and (max-width: 480px) {
@@ -683,29 +773,41 @@
 
     .tiktokbutton {
       color: white;
-      margin: 0 1%;
+      margin: 0 3%;
     }
 
     .infobutton {
       color: white;
-      margin: 0 1%;
+      margin: 0 3%;
     }
 
     .statsbutton {
       color: white;
-      margin: 0 1%;
+      margin: 0 3%;
     }
 
-    .statsbutton:hover {
-      color: gray;
+    .toggle {
+      display: none;
     }
 
-    .infobutton:hover {
-      color: gray;
+    .penicon {
+      display: none;
     }
 
-    .tiktokbutton:hover {
-      color: gray;
+    .diamondicon {
+      display: none;
+    }
+
+    .hearticon {
+      display: none;
+    }
+
+    .fireicon {
+      display: none;
+    }
+
+    .elixiricon {
+      display: none;
     }
 
     .correctanswer {
