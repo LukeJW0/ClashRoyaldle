@@ -810,6 +810,10 @@
       display: none;
     }
 
+    .shieldicon {
+      display: none;
+    }
+
     .correctanswer {
       font-size: 2rem;
     }
